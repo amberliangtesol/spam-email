@@ -219,10 +219,29 @@ def main():
     st.markdown("Classify messages in real-time with detailed explanations")
     
     # Load model
-    model, vectorizer = load_model_and_vectorizer()
-    
-    if model is None:
-        st.error("❌ No trained model found. Please train a model first.")
+    try:
+        model, vectorizer = load_model_and_vectorizer()
+        
+        if model is None:
+            st.warning("⏳ Model is being created for the first time. This may take a moment...")
+            # Try to create model
+            import sys
+            import os
+            parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            if parent_dir not in sys.path:
+                sys.path.insert(0, parent_dir)
+            try:
+                from model_loader import load_or_create_model
+                model, vectorizer, model_name = load_or_create_model()
+                if model is None:
+                    st.error("❌ Failed to create model. Please check the logs.")
+                    st.stop()
+            except Exception as e:
+                st.error(f"❌ Error creating model: {str(e)}")
+                st.stop()
+    except Exception as e:
+        st.error(f"❌ Error loading model: {str(e)}")
+        st.info("Please refresh the page or check the application logs.")
         st.stop()
     
     # Sidebar configuration

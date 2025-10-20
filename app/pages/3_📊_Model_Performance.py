@@ -31,40 +31,66 @@ st.set_page_config(
 def load_metrics():
     """Load all available metrics"""
     metrics = {}
+    
+    # Try multiple directories for metrics
+    possible_dirs = [
+        Path('reports'),
+        Path('models'),
+        Path('.'),
+    ]
+    
+    for base_dir in possible_dirs:
+        if not base_dir.exists():
+            continue
+            
+        # Try to find evaluation files
+        eval_files = list(base_dir.glob('evaluation*.json'))
+        if eval_files:
+            with open(eval_files[0], 'r') as f:
+                data = json.load(f)
+                metrics['evaluation'] = data
+                # Create benchmark structure from evaluation data
+                if 'metrics' in data:
+                    metrics['benchmark'] = {
+                        'precision': data['metrics'].get('precision', 0),
+                        'recall': data['metrics'].get('recall', 0),
+                        'f1': data['metrics'].get('f1_score', 0),
+                        'accuracy': data['metrics'].get('accuracy', 0)
+                    }
+                break
+        
+        # Load benchmark results
+        benchmark_file = base_dir / 'benchmark_results.json'
+        if benchmark_file.exists():
+            with open(benchmark_file, 'r') as f:
+                metrics['benchmark'] = json.load(f)
+        
+        # Load optimal threshold
+        threshold_file = base_dir / 'optimal_threshold.json'
+        if threshold_file.exists():
+            with open(threshold_file, 'r') as f:
+                metrics['threshold'] = json.load(f)
+    
+    # Load additional analysis files if reports_dir exists
     reports_dir = Path('reports')
-    
-    if not reports_dir.exists():
-        return metrics
-    
-    # Load benchmark results
-    benchmark_file = reports_dir / 'benchmark_results.json'
-    if benchmark_file.exists():
-        with open(benchmark_file, 'r') as f:
-            metrics['benchmark'] = json.load(f)
-    
-    # Load optimal threshold
-    threshold_file = reports_dir / 'optimal_threshold.json'
-    if threshold_file.exists():
-        with open(threshold_file, 'r') as f:
-            metrics['threshold'] = json.load(f)
-    
-    # Load regularization analysis
-    reg_file = reports_dir / 'regularization_analysis.json'
-    if reg_file.exists():
-        with open(reg_file, 'r') as f:
-            metrics['regularization'] = json.load(f)
-    
-    # Load cost analysis
-    cost_file = reports_dir / 'cost_sensitive_analysis.json'
-    if cost_file.exists():
-        with open(cost_file, 'r') as f:
-            metrics['cost'] = json.load(f)
-    
-    # Load LinearSVC comparison
-    svc_file = reports_dir / 'linearsvc_comparison.json'
-    if svc_file.exists():
-        with open(svc_file, 'r') as f:
-            metrics['svc_comparison'] = json.load(f)
+    if reports_dir.exists():
+        # Load regularization analysis
+        reg_file = reports_dir / 'regularization_analysis.json'
+        if reg_file.exists():
+            with open(reg_file, 'r') as f:
+                metrics['regularization'] = json.load(f)
+        
+        # Load cost analysis
+        cost_file = reports_dir / 'cost_sensitive_analysis.json'
+        if cost_file.exists():
+            with open(cost_file, 'r') as f:
+                metrics['cost'] = json.load(f)
+        
+        # Load LinearSVC comparison
+        svc_file = reports_dir / 'linearsvc_comparison.json'
+        if svc_file.exists():
+            with open(svc_file, 'r') as f:
+                metrics['svc_comparison'] = json.load(f)
     
     return metrics
 
