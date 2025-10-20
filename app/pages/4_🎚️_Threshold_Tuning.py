@@ -26,31 +26,58 @@ st.set_page_config(
 def load_model_and_data():
     """Load model and test data"""
     try:
-        model_dir = Path('models')
-        model_files = list(model_dir.glob('*.pkl'))
+        # Try to use model_loader first
+        import sys
+        import os
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if parent_dir not in sys.path:
+            sys.path.insert(0, parent_dir)
         
-        if not model_files:
-            return None, None, None, None
+        try:
+            from model_loader import load_or_create_model
+            model, vectorizer, model_name = load_or_create_model()
+        except ImportError:
+            # Fallback to loading from models directory
+            model_dir = Path('models')
+            model_files = list(model_dir.glob('*.pkl'))
+            
+            if not model_files:
+                return None, None, None, None
+            
+            model_files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
+            model = joblib.load(model_files[0])
+            vectorizer = None
         
-        model_files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
-        model = joblib.load(model_files[0])
-        
-        # Load test data if available
+        # Load test data
         data_dir = Path('datasets')
-        test_files = list(data_dir.glob('*test*.csv'))
-        
         X_test = None
         y_test = None
         
-        if test_files:
-            test_df = pd.read_csv(test_files[0])
-            if 'text' in test_df.columns and 'label' in test_df.columns:
-                X_test = test_df['text'].values
-                y_test = test_df['label'].values
-                if y_test.dtype == 'object':
-                    y_test = (y_test == 'spam').astype(int)
+        # Try to load SMS spam dataset
+        sms_file = data_dir / 'sms_spam_no_header.csv'
+        if sms_file.exists():
+            df = pd.read_csv(sms_file, header=None, names=['label', 'message'])
+            # Convert labels
+            df['label_num'] = df['label'].map({'ham': 0, 'spam': 1})
+            
+            # Use last 20% as test data
+            test_size = int(len(df) * 0.2)
+            test_df = df.tail(test_size)
+            
+            X_test = test_df['message'].values
+            y_test = test_df['label_num'].values
+        else:
+            # Try other test files
+            test_files = list(data_dir.glob('*test*.csv'))
+            if test_files:
+                test_df = pd.read_csv(test_files[0])
+                if 'text' in test_df.columns and 'label' in test_df.columns:
+                    X_test = test_df['text'].values
+                    y_test = test_df['label'].values
+                    if y_test.dtype == 'object':
+                        y_test = (y_test == 'spam').astype(int)
         
-        return model, None, X_test, y_test
+        return model, vectorizer, X_test, y_test
         
     except Exception as e:
         st.error(f"Error loading model/data: {str(e)}")

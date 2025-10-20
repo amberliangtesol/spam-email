@@ -265,6 +265,10 @@ def main():
     if 'prediction_history' not in st.session_state:
         st.session_state.prediction_history = []
     
+    # Sample text state
+    if 'sample_text' not in st.session_state:
+        st.session_state.sample_text = ""
+    
     # Main prediction interface
     col1, col2 = st.columns([2, 1])
     
@@ -274,10 +278,15 @@ def main():
         # Text input
         text_input = st.text_area(
             "Message to classify:",
+            value=st.session_state.sample_text,
             height=150,
             placeholder="Enter or paste your message here...\n\nExample: 'Congratulations! You've won a free iPhone. Click here to claim your prize!'",
             key="text_input"
         )
+        
+        # Clear sample text after use
+        if st.session_state.sample_text:
+            st.session_state.sample_text = ""
         
         # Sample messages
         st.markdown("#### 🎲 Try Sample Messages")
@@ -285,11 +294,13 @@ def main():
         
         with sample_col1:
             if st.button("🎁 Spam Sample", use_container_width=True):
-                st.session_state.text_input = "WINNER!! You have won £1000 cash or a £2000 prize. To claim, call 09050000555. Valid 12 hours only."
+                st.session_state.sample_text = "WINNER!! You have won £1000 cash or a £2000 prize. To claim, call 09050000555. Valid 12 hours only."
+                st.rerun()
         
         with sample_col2:
             if st.button("✉️ Ham Sample", use_container_width=True):
-                st.session_state.text_input = "Hi! How are you? Just wanted to check if we're still meeting for lunch tomorrow at noon."
+                st.session_state.sample_text = "Hi! How are you? Just wanted to check if we're still meeting for lunch tomorrow at noon."
+                st.rerun()
         
         # Analyze button
         analyze_button = st.button(
