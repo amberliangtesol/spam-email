@@ -12,7 +12,7 @@ An advanced machine learning-powered spam email classification system with inter
 
 ## 🚀 Live Demo
 
-🔗 **[View Live Dashboard]([[https://spam-email-detec-master.streamlit.app/](https://spam-email-detec-master.streamlit.app/Live_Prediction)](https://spam-email-detec-master.streamlit.app/Live_Prediction))**
+🔗 **[View Live Dashboard](https://spam-email-detec-master.streamlit.app/Live_Prediction)**
 
 Experience the spam classifier in action with our interactive Streamlit dashboard!
 
