@@ -1,0 +1,39 @@
+{
+  "model": {
+    "type": "LogisticRegression",
+    "params": {
+      "C": 1.0,
+      "class_weight": null,
+      "random_state": 42,
+      "max_iter": 1000,
+      "solver": "lbfgs"
+    }
+  },
+  "vectorizer": {
+    "max_features": 5000,
+    "ngram_range": [1, 1],
+    "min_df": 2,
+    "max_df": 0.95,
+    "use_idf": true,
+    "sublinear_tf": false,
+    "lowercase": true
+  },
+  "preprocessing": {
+    "remove_stopwords": false,
+    "mask_patterns": true,
+    "normalize": true,
+    "min_word_length": 1
+  },
+  "validation": {
+    "test_size": 0.2,
+    "stratify": true,
+    "random_state": 42
+  },
+  "paths": {
+    "raw_data": "datasets/sms_spam_no_header.csv",
+    "processed_data": "datasets/processed/train_data.csv",
+    "model_dir": "models",
+    "reports_dir": "reports"
+  },
+  "version": "1.0.0"
+}

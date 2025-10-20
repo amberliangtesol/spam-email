@@ -1,0 +1,50 @@
+{
+  "model": {
+    "type": "LogisticRegression",
+    "params": {
+      "C": 0.5,
+      "class_weight": "balanced",
+      "random_state": 42,
+      "solver": "liblinear",
+      "max_iter": 2000,
+      "penalty": "l2"
+    }
+  },
+  "vectorizer": {
+    "max_features": 8000,
+    "ngram_range": [1, 2],
+    "min_df": 1,
+    "max_df": 0.95,
+    "use_idf": true,
+    "sublinear_tf": true,
+    "lowercase": true,
+    "strip_accents": "unicode",
+    "token_pattern": "\\b\\w+\\b"
+  },
+  "preprocessing": {
+    "remove_stopwords": false,
+    "stem_words": false,
+    "mask_patterns": true,
+    "normalize": true,
+    "min_word_length": 2
+  },
+  "validation": {
+    "test_size": 0.2,
+    "stratify": true,
+    "random_state": 42,
+    "cv_folds": 5
+  },
+  "tuning": {
+    "optimize_for": "recall",
+    "target_recall": 0.93,
+    "scoring": "recall"
+  },
+  "paths": {
+    "raw_data": "datasets/sms_spam_no_header.csv",
+    "processed_data": "datasets/processed/train_data.csv",
+    "model_dir": "models",
+    "reports_dir": "reports"
+  },
+  "version": "2.0.0",
+  "phase": "recall_optimization"
+}
