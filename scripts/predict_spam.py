@@ -10,7 +10,7 @@ from typing import Dict, Any, List, Optional, Union
 import pandas as pd
 import numpy as np
 
-from utils.config import ConfigLoader
+from scripts.utils.config import ConfigLoader
 
 # Setup logging
 logging.basicConfig(

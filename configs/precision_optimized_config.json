@@ -3,10 +3,7 @@
     "type": "LogisticRegression",
     "params": {
       "C": 2.0,
-      "class_weight": {
-        "0": 1.0,
-        "1": 1.5
-      },
+      "class_weight": "balanced",
       "random_state": 42,
       "solver": "liblinear",
       "penalty": "l2",
