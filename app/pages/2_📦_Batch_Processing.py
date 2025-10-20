@@ -29,6 +29,17 @@ st.set_page_config(
 def load_model_and_vectorizer():
     """Load the trained model and vectorizer"""
     try:
+        # Import model_loader from parent directory
+        from model_loader import load_or_create_model
+        
+        # Load or create model using the unified loader
+        model, vectorizer, model_name = load_or_create_model()
+        
+        # Return model and vectorizer (None if pipeline)
+        return model, vectorizer
+        
+    except ImportError:
+        # Fallback to old method if model_loader not found
         model_dir = Path('models')
         
         # Try to find the latest model

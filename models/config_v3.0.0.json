@@ -1,0 +1,69 @@
+{
+  "model": {
+    "type": "LogisticRegression",
+    "params": {
+      "C": 2.0,
+      "class_weight": "balanced",
+      "random_state": 42,
+      "solver": "liblinear",
+      "penalty": "l2",
+      "max_iter": 3000,
+      "tol": 0.0001
+    }
+  },
+  "vectorizer": {
+    "max_features": 10000,
+    "ngram_range": [
+      1,
+      3
+    ],
+    "min_df": 2,
+    "max_df": 0.9,
+    "use_idf": true,
+    "sublinear_tf": true,
+    "lowercase": true,
+    "strip_accents": "unicode",
+    "token_pattern": "\\b\\w+\\b",
+    "norm": "l2"
+  },
+  "preprocessing": {
+    "remove_stopwords": false,
+    "stem_words": false,
+    "mask_patterns": true,
+    "normalize": true,
+    "min_word_length": 2,
+    "remove_punctuation": false
+  },
+  "validation": {
+    "test_size": 0.2,
+    "stratify": true,
+    "random_state": 42,
+    "cv_folds": 5
+  },
+  "threshold": {
+    "default": 0.5,
+    "optimal": 0.45,
+    "precision_target": 0.9,
+    "recall_target": 0.93,
+    "optimization": "balanced"
+  },
+  "regularization": {
+    "type": "l2",
+    "strength": 2.0,
+    "auto_scale": true
+  },
+  "tuning": {
+    "optimize_for": "precision_recall_balance",
+    "target_precision": 0.9,
+    "target_recall": 0.93,
+    "scoring": "f1"
+  },
+  "paths": {
+    "raw_data": "/Users/amber/Desktop/spam-email/datasets/sms_spam_no_header.csv",
+    "processed_data": "/Users/amber/Desktop/spam-email/datasets/processed/train_data.csv",
+    "model_dir": "/Users/amber/Desktop/spam-email/models",
+    "reports_dir": "/Users/amber/Desktop/spam-email/reports"
+  },
+  "version": "3.0.0",
+  "phase": "precision_recovery"
+}
