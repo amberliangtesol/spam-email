@@ -67,6 +67,11 @@ def load_model_and_vectorizer():
     """Load the trained model and vectorizer"""
     try:
         # Import model_loader from parent directory
+        import sys
+        import os
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if parent_dir not in sys.path:
+            sys.path.insert(0, parent_dir)
         from model_loader import load_or_create_model
         
         # Load or create model using the unified loader
@@ -75,7 +80,7 @@ def load_model_and_vectorizer():
         # Return model and vectorizer (None if pipeline)
         return model, vectorizer
         
-    except ImportError:
+    except ImportError as e:
         # Fallback to old method if model_loader not found
         model_dir = Path('models')
         
