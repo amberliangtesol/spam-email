@@ -272,21 +272,22 @@ def main():
         st.markdown("### 📝 Enter Message")
         st.markdown("")  # Add space
         
-        # Text input
-        text_input = st.text_area(
-            "Enter your message to classify:",
-            height=200,
-            placeholder="Type or paste your message here...\n\nExample:\n• 'Congratulations! You've won a free iPhone!'\n• 'Hey, are we still meeting for lunch tomorrow?'\n• 'URGENT: Claim your prize now!'",
-            key="text_input"
-        )
-        
-        # Analyze button
-        analyze_button = st.button(
-            "🔍 Analyze Message",
-            type="primary",
-            use_container_width=True,
-            disabled=not text_input
-        )
+        # Use form to prevent "Press enter to apply"
+        with st.form(key="prediction_form", clear_on_submit=False):
+            # Text input without key parameter
+            text_input = st.text_area(
+                "Enter your message to classify:",
+                height=200,
+                placeholder="Type or paste your message here...\n\nExample:\n• 'Congratulations! You've won a free iPhone!'\n• 'Hey, are we still meeting for lunch tomorrow?'\n• 'URGENT: Claim your prize now!'"
+            )
+            
+            # Analyze button inside form
+            analyze_button = st.form_submit_button(
+                "🔍 Analyze Message",
+                type="primary",
+                use_container_width=True,
+                disabled=False
+            )
     
     with col2:
         st.markdown("### 📊 Quick Stats")
